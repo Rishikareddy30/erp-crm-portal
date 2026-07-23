@@ -31,10 +31,11 @@ export async function login(req: Request, res: Response) {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  const expiresIn = (process.env.JWT_EXPIRES_IN || "8h") as jwt.SignOptions["expiresIn"];
   const token = jwt.sign(
     { userId: user.id, role: user.role, email: user.email },
     process.env.JWT_SECRET as string,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "8h" }
+    { expiresIn }
   );
 
   res.json({
